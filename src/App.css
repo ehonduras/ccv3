@@ -1,0 +1,53 @@
+.App {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+}
+
+.callModalContainer{
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.callPartiesContainer{
+  background-color: whitesmoke;
+  color:#282c34;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 75vw;
+  height: 75vh;
+}
+
+.userCallItem{
+  border: 3px solid red;
+  width: 99%;
+  height: 99%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.startCallControls, .inCallControls{
+  width: 33vw;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.icon:hover{
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+video{
+  width: 100%;
+}
