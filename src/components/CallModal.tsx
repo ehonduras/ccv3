@@ -7,16 +7,16 @@ interface IPropsCallModal{
 }
 
 const CallModal: React.FC<IPropsCallModal> = ({children}) => {
-  const {localVideo, remoteVideo} = useContext(Context);
+  const {localStream, remoteStream} = useContext(Context);
 
 return (
     <div className='callModalContainer'>
       <div className='callPartiesContainer'>
         <div className='userCallItem'>
-          <video playsInline muted autoPlay className='video' ref={localVideo}/>
+          <video playsInline autoPlay className='video' ref={localStream}/>
         </div>
         <div className='userCallItem'>
-          <video playsInline muted autoPlay className='video' ref={remoteVideo}/>
+          <video playsInline autoPlay className='video' ref={remoteStream}/>
         </div>
       </div>
       {children}

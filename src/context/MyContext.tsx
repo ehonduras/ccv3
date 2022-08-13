@@ -1,28 +1,41 @@
 import { create } from 'cypress/types/lodash';
 import React, {createContext, useState, useEffect, useRef, MutableRefObject } from 'react';
-import { InfobipRTC, CallOptions, Call, HangupStatus, IncomingCall, IncomingCallEvent} from 'infobip-rtc';
+import { InfobipRTC, CallOptions, Call, HangupStatus, IncomingCall, IncomingCallEvent, OutgoingCall} from 'infobip-rtc';
 
 interface IContextProps{
     children: React.ReactNode;
 }
 
 interface ContextTypes{
+    identity?: string;
     showCallModal?: boolean;
     showCallModalSet?: React.Dispatch<React.SetStateAction<boolean>>;
-    localVideo?: MutableRefObject<HTMLVideoElement | null>;
-    remoteVideo?: MutableRefObject<HTMLVideoElement | null>;
+    callRinging?: boolean;
+    callRingingSet?: React.Dispatch<React.SetStateAction<boolean>>;
+    localStream?: MutableRefObject<HTMLVideoElement | null>;
+    remoteStream?: MutableRefObject<HTMLVideoElement | null>;
+    incomingCallRef?: MutableRefObject<IncomingCall | null>;
     startAudioCall?: (id: string) => void;
     answerAudioCall?: () => void;
+    startVideoCall?: (id: string) => void;
+    answerVideoCall?: () => void;
+    hangUpCall?: () => void;
+    muteRemoteUser?: () => void;
+    muteLocalUser?: () => void;
 }
 
 const Context = createContext<ContextTypes>({});
 
 const MyContext:React.FC<IContextProps> = ({children}) => {
+    const [identity, identitySet] = useState('');
     const [showCallModal, showCallModalSet] = useState(false);
     const [stream, streamSet] = useState<MediaStream | null>(null);
+    const [callRinging, callRingingSet] = useState(false);
+    const [localUserMuted, localUserMutedSet] = useState(false);
+    const [remoteUserMuted, remoteUserMutedSet] = useState(false);
 
-    const localVideo: MutableRefObject<HTMLVideoElement | null> = useRef(null);
-    const remoteVideo: MutableRefObject<HTMLVideoElement | null> = useRef(null);
+    const localStream: MutableRefObject<HTMLVideoElement | null> = useRef(null);
+    const remoteStream: MutableRefObject<HTMLVideoElement | null> = useRef(null);
     const connectionRef:MutableRefObject<InfobipRTC | null> = useRef(null);
     const callRef:MutableRefObject<Call | null> = useRef(null);
     const incomingCallRef:MutableRefObject<IncomingCall | null> = useRef(null);
@@ -35,7 +48,7 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
     
 
     const connect = () => {
-        let infobipRTC = new InfobipRTC('string', { debug: true } );
+        let infobipRTC = new InfobipRTC('', { debug: true } );
 
         infobipRTC && (connectionRef.current = infobipRTC);
         
@@ -53,11 +66,9 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
     }
 
     const startAudioCall = (id: string) => {
-        let callOptions = CallOptions.builder().setVideo(true).build();
-
         try {
             if(connectionRef.current){
-                callRef.current = connectionRef.current.call(id, callOptions);
+                callRef.current = connectionRef.current.call(id);
                 createCallEventListeners();
             }
         } catch (error) {
@@ -83,16 +94,23 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
         if(connectionRef && connectionRef.current){
             connectionRef.current.on('connected', function(event: {identity: string}) {
                 console.log('Connected with identity: ' + event.identity);
+                identitySet(event.identity);
     
                 connectionRef.current!.on('incoming-call', function(incomingCallEvent: IncomingCallEvent) {
                     incomingCallRef.current = incomingCallEvent.incomingCall as IncomingCall;
                     console.log('Received incoming call from: ' + incomingCallRef.current.source().identity);
+
+                    callRingingSet(true);
                      
                     incomingCallRef.current.on('established', function(event: {localStream: MediaStream, remoteStream: MediaStream}) {
-                        localVideo.current!.srcObject = event.localStream;
-                        remoteVideo.current!.srcObject = event.remoteStream;
+                        localStream.current!.srcObject = event.localStream;
+                        remoteStream.current!.srcObject = event.remoteStream;
                     });
-                    incomingCallRef.current.on('hangup', function() {});
+                    incomingCallRef.current.on('hangup', function() {
+                        incomingCallRef.current && incomingCallRef.current.hangup();
+                        showCallModalSet(false);
+                        callRingingSet(false);
+                    });
                  });
               });
         }
@@ -106,12 +124,16 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
 
             callRef.current.on('established', function(event: {localStream: MediaStream, remoteStream: MediaStream}) {
                 console.log('Alice answered call!');
-                // localVideo.current!.srcObject = event.localStream;
-                // remoteVideo.current!.srcObject = event.remoteStream;
+                console.log(callRef.current);
+                
+                localStream.current!.srcObject = event.localStream;
+                remoteStream.current!.srcObject = event.remoteStream;
           });
 
             callRef.current.on('hangup', (event: HangupStatus) => {
-                hangUpCall(event);                
+                console.log(event);
+                callRef.current && callRef.current.hangup();
+                showCallModalSet(false);               
           });
         }
     }
@@ -128,13 +150,38 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
 
     const answerVideoCall = () => {}
 
-    const hangUpCall = (event: HangupStatus) => {
+    const hangUpCall = () => {
+        incomingCallRef.current && incomingCallRef.current.hangup();
         callRef.current && callRef.current.hangup();
-        console.log(event);        
+        //provjeriti dodatno
+    }
+
+    const muteRemoteUser = () => {
+        if(!remoteUserMuted && incomingCallRef.current) {
+            incomingCallRef.current.mute(true).catch((error:string) => console.log(error));
+            remoteUserMutedSet(true);
+            console.log('remote user muted');
+            return;
+        }
+
+        incomingCallRef.current!.mute(false).catch((error:string) => console.log(error));
+        remoteUserMutedSet(false);
+    }
+    
+    const muteLocalUser = () => {
+        if(!localUserMuted && callRef.current) {
+            callRef.current.mute(true).catch((error:string) => console.log(error));
+            localUserMutedSet(true);
+            console.log('local user muted');
+            return;
+        }
+
+        callRef.current!.mute(false).catch((error:string) => console.log(error));
+        localUserMutedSet(false);
     }
 
   return (
-    <Context.Provider value={{showCallModal, showCallModalSet, localVideo, remoteVideo, startAudioCall, answerAudioCall}}>
+    <Context.Provider value={{identity, showCallModal, showCallModalSet, callRinging, callRingingSet, localStream, remoteStream, incomingCallRef, startAudioCall, answerAudioCall, startVideoCall, answerVideoCall, hangUpCall, muteRemoteUser, muteLocalUser}}>
         {children}
     </Context.Provider>
   )
