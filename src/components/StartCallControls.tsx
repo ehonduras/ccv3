@@ -6,7 +6,7 @@ import { MyContext, Context } from '../context/MyContext';
 import IncomingCallCont from './IncomingCallCont';
 
 const Options = () => {
-  const {callRinging, callRingingSet, showCallModalSet, startAudioCall, answerAudioCall, startVideoCall, answerVideoCall} = useContext(Context);
+  const {callRinging, callRingingSet, showCallModalSet, startAudioCall, answerCall, startVideoCall} = useContext(Context);
 
   const handleAudioClick = () => {
     showCallModalSet!(true);

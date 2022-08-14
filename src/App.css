@@ -76,6 +76,10 @@ video{
   text-decoration: none;
 }
 
+.incomingCallContainer button:last-child:hover{
+  background-image: linear-gradient(to bottom, #2e4554, #ca252d);
+}
+
 .incomingCallContainer button:hover{
   background: #2e4554;
   background-image: linear-gradient(to bottom, #2e4554, #228ea1);

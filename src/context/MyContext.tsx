@@ -12,16 +12,20 @@ interface ContextTypes{
     showCallModalSet?: React.Dispatch<React.SetStateAction<boolean>>;
     callRinging?: boolean;
     callRingingSet?: React.Dispatch<React.SetStateAction<boolean>>;
+    isLocalVideoCall?: boolean;
+    isRemoteVideoCall?: boolean;
     localStream?: MutableRefObject<HTMLVideoElement | null>;
     remoteStream?: MutableRefObject<HTMLVideoElement | null>;
     incomingCallRef?: MutableRefObject<IncomingCall | null>;
     startAudioCall?: (id: string) => void;
-    answerAudioCall?: () => void;
     startVideoCall?: (id: string) => void;
-    answerVideoCall?: () => void;
+    answerCall?: () => void;
+    declineCall?: () => void;
     hangUpCall?: () => void;
     muteRemoteUser?: () => void;
     muteLocalUser?: () => void;
+    toggleLocalVideo?: () => void;
+    toggleRemoteVideo?: () => void;
 }
 
 const Context = createContext<ContextTypes>({});
@@ -33,6 +37,8 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
     const [callRinging, callRingingSet] = useState(false);
     const [localUserMuted, localUserMutedSet] = useState(false);
     const [remoteUserMuted, remoteUserMutedSet] = useState(false);
+    const [isLocalVideoCall, isLocalVideoCallSet] = useState(false);
+    const [isRemoteVideoCall, isRemoteVideoCallSet] = useState(false);
 
     const localStream: MutableRefObject<HTMLVideoElement | null> = useRef(null);
     const remoteStream: MutableRefObject<HTMLVideoElement | null> = useRef(null);
@@ -83,6 +89,7 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
             if(connectionRef.current){
                 callRef.current = connectionRef.current.call(id, callOptions);
                 createCallEventListeners();
+                isLocalVideoCallSet(true);
             }
         } catch (error) {
             console.log(error);            
@@ -105,11 +112,21 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
                     incomingCallRef.current.on('established', function(event: {localStream: MediaStream, remoteStream: MediaStream}) {
                         localStream.current!.srcObject = event.localStream;
                         remoteStream.current!.srcObject = event.remoteStream;
+
+                        incomingCallRef.current!.hasLocalVideo() && isLocalVideoCallSet(true);
+                        incomingCallRef.current!.hasRemoteVideo() && isRemoteVideoCallSet(true);
                     });
                     incomingCallRef.current.on('hangup', function() {
                         incomingCallRef.current && incomingCallRef.current.hangup();
                         showCallModalSet(false);
                         callRingingSet(false);
+                    });
+                    incomingCallRef.current.on('updated', function(event: {localStream: MediaStream, remoteStream: MediaStream}) {
+                        localStream.current!.srcObject = event.localStream;
+                        remoteStream.current!.srcObject = event.remoteStream;
+        
+                        incomingCallRef.current!.hasLocalVideo() && isLocalVideoCallSet(true);
+                        incomingCallRef.current!.hasRemoteVideo() && isRemoteVideoCallSet(true);  
                     });
                  });
               });
@@ -128,6 +145,9 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
                 
                 localStream.current!.srcObject = event.localStream;
                 remoteStream.current!.srcObject = event.remoteStream;
+
+                callRef.current!.hasLocalVideo() && isLocalVideoCallSet(true);
+                callRef.current!.hasRemoteVideo() && isRemoteVideoCallSet(true);
           });
 
             callRef.current.on('hangup', (event: HangupStatus) => {
@@ -135,20 +155,26 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
                 callRef.current && callRef.current.hangup();
                 showCallModalSet(false);               
           });
+
+            callRef.current.on('updated', (event: {localStream: MediaStream, remoteStream: MediaStream}) => {
+                localStream.current!.srcObject = event.localStream;
+                remoteStream.current!.srcObject = event.remoteStream;
+
+                callRef.current!.hasLocalVideo() && isLocalVideoCallSet(true);
+                callRef.current!.hasRemoteVideo() && isRemoteVideoCallSet(true);         
+      });
         }
     }
 
-    const answerAudioCall = () => {
+    const answerCall = () => {
         incomingCallRef.current && incomingCallRef.current.accept(); 
         console.log('Incoming call answered');        
     }
 
-    const declineAudioCall = () => {
+    const declineCall = () => {
         incomingCallRef.current && incomingCallRef.current.decline();
         console.log('Incoming call declined'); 
     }
-
-    const answerVideoCall = () => {}
 
     const hangUpCall = () => {
         incomingCallRef.current && incomingCallRef.current.hangup();
@@ -180,8 +206,30 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
         localUserMutedSet(false);
     }
 
+    const toggleLocalVideo = () => {
+        if(!isLocalVideoCall && callRef.current){
+            isLocalVideoCallSet(true);
+            callRef.current.localVideo(true).catch(error => console.log(error));
+            console.log('local video toggled');            
+            return;
+        }
+        isLocalVideoCallSet(false);
+        callRef.current!.localVideo(false).catch(error => console.log(error));
+    }
+
+    const toggleRemoteVideo = () => {
+        if(!isLocalVideoCall && incomingCallRef.current){
+            isLocalVideoCallSet(true);
+            incomingCallRef.current.localVideo(true).catch(error => console.log(error));
+            console.log('remote video toggled');            
+            return;
+        }
+        isLocalVideoCallSet(false);
+        incomingCallRef.current!.localVideo(false).catch(error => console.log(error));
+    }
+
   return (
-    <Context.Provider value={{identity, showCallModal, showCallModalSet, callRinging, callRingingSet, localStream, remoteStream, incomingCallRef, startAudioCall, answerAudioCall, startVideoCall, answerVideoCall, hangUpCall, muteRemoteUser, muteLocalUser}}>
+    <Context.Provider value={{identity, showCallModal, showCallModalSet, callRinging, callRingingSet, localStream, remoteStream, incomingCallRef, startAudioCall, answerCall, declineCall, startVideoCall, hangUpCall, muteRemoteUser, muteLocalUser, isLocalVideoCall, isRemoteVideoCall, toggleLocalVideo, toggleRemoteVideo}}>
         {children}
     </Context.Provider>
   )

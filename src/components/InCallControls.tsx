@@ -7,7 +7,7 @@ import { MyContext, Context } from '../context/MyContext';
 import { hasUncaughtExceptionCaptureCallback } from 'process';
 
 const InCallControls = () => {
-  const { showCallModalSet, hangUpCall, muteRemoteUser, muteLocalUser, incomingCallRef } = useContext(Context);
+  const { showCallModalSet, hangUpCall, muteRemoteUser, muteLocalUser, incomingCallRef, toggleLocalVideo, toggleRemoteVideo } = useContext(Context);
 
   const handlePhoneSlash = () => {
     hangUpCall!();
@@ -19,17 +19,25 @@ const InCallControls = () => {
       muteRemoteUser!();
       return;
     }
-
     muteLocalUser!();
   }
 
+
+  const handleVideoSlash = () => {
+    if(incomingCallRef && incomingCallRef.current){
+      toggleRemoteVideo!();
+      return;
+    }
+    toggleLocalVideo!();
+  }
+  
   return (
     <div className='inCallControls'>
         <div className='iconContainer'>
             <FontAwesomeIcon icon={faMicrophoneSlash} color='whitesmoke' size='3x' className='icon' onClick={handleMicrophoneSlash}></FontAwesomeIcon>
         </div>
         <div className='iconContainer'>
-            <FontAwesomeIcon icon={faVideoSlash} color='whitesmoke' size='3x' className='icon'></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faVideoSlash} color='whitesmoke' size='3x' className='icon' onClick={handleVideoSlash}></FontAwesomeIcon>
         </div>
         <div className='iconContainer'>
             <FontAwesomeIcon icon={faPhoneSlash } color='red' size='3x' className='icon' onClick={handlePhoneSlash}></FontAwesomeIcon>
