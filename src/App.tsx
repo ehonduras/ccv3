@@ -3,14 +3,17 @@ import './App.css';
 import CallModal from './components/CallModal';
 import InCallControls from './components/InCallControls';
 import StartCallControls from './components/StartCallControls';
-import { MyContext, Context } from './context/MyContext';
+import ConnectionState from './components/ConnectionState';
+import { Context } from './context/MyContext';
 
 function App() {
-  const {showCallModal} = useContext(Context);
+  const {connectionStatus, showCallModal} = useContext(Context);
 
   return (
     <div className="App">
-        {showCallModal ? <CallModal> <InCallControls /> </CallModal> : <StartCallControls />}
+        { connectionStatus && <ConnectionState /> }
+
+        { showCallModal ? <CallModal> <InCallControls /> </CallModal> : <StartCallControls />}
     </div>
   );
 }

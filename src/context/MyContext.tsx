@@ -1,12 +1,16 @@
 import { create } from 'cypress/types/lodash';
 import React, {createContext, useState, useEffect, useRef, MutableRefObject } from 'react';
 import { InfobipRTC, CallOptions, Call, HangupStatus, IncomingCall, IncomingCallEvent, OutgoingCall} from 'infobip-rtc';
+import {ConnectionStatus} from '../Help/ConnectionStatus';
 
 interface IContextProps{
     children: React.ReactNode;
 }
 
 interface ContextTypes{
+    connectionStatus?: ConnectionStatus;
+    connect?: () => void;
+    disconnect?: () => void;
     identity?: string;
     showCallModal?: boolean;
     showCallModalSet?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,11 +30,13 @@ interface ContextTypes{
     muteLocalUser?: () => void;
     toggleLocalVideo?: () => void;
     toggleRemoteVideo?: () => void;
+    connectionRef?: MutableRefObject<InfobipRTC | null>;
 }
 
 const Context = createContext<ContextTypes>({});
 
 const MyContext:React.FC<IContextProps> = ({children}) => {
+    const [connectionStatus, connectionStatusSet] = useState(ConnectionStatus.disconnected);
     const [identity, identitySet] = useState('');
     const [showCallModal, showCallModalSet] = useState(false);
     const [stream, streamSet] = useState<MediaStream | null>(null);
@@ -64,11 +70,9 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
     }
 
     const disconnect = () => {
+        console.log('disconnecting');
+        
         connectionRef.current && connectionRef.current.disconnect();
-
-        connectionRef.current && connectionRef.current.on('disconnected', function(event: string) {
-            console.log('Disconnected!');
-          });
     }
 
     const startAudioCall = (id: string) => {
@@ -102,6 +106,7 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
             connectionRef.current.on('connected', function(event: {identity: string}) {
                 console.log('Connected with identity: ' + event.identity);
                 identitySet(event.identity);
+                connectionStatusSet(ConnectionStatus.connected);
     
                 connectionRef.current!.on('incoming-call', function(incomingCallEvent: IncomingCallEvent) {
                     incomingCallRef.current = incomingCallEvent.incomingCall as IncomingCall;
@@ -131,6 +136,19 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
                  });
               });
         }
+        connectionRef.current!.on('disconnected', function(event: {reason: string}){
+            console.log('Disconnected');
+            console.log(event);
+            connectionStatusSet(ConnectionStatus.disconnected);                                
+        });
+        connectionRef.current!.on('reconnecting', function(){
+            console.log('Reconnecting');
+            connectionStatusSet(ConnectionStatus.reconnecting);
+        });
+        connectionRef.current!.on('reconnected', function(){
+            console.log('Reconnected');
+            connectionStatusSet(ConnectionStatus.reconnected);
+        });
     }
 
     const createCallEventListeners = () => {
@@ -229,7 +247,7 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
     }
 
   return (
-    <Context.Provider value={{identity, showCallModal, showCallModalSet, callRinging, callRingingSet, localStream, remoteStream, incomingCallRef, startAudioCall, answerCall, declineCall, startVideoCall, hangUpCall, muteRemoteUser, muteLocalUser, isLocalVideoCall, isRemoteVideoCall, toggleLocalVideo, toggleRemoteVideo}}>
+    <Context.Provider value={{connectionStatus, connect, disconnect, identity, showCallModal, showCallModalSet, callRinging, callRingingSet, localStream, remoteStream, incomingCallRef, startAudioCall, answerCall, declineCall, startVideoCall, hangUpCall, muteRemoteUser, muteLocalUser, isLocalVideoCall, isRemoteVideoCall, toggleLocalVideo, toggleRemoteVideo, connectionRef}}>
         {children}
     </Context.Provider>
   )
