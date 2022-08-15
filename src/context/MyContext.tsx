@@ -60,7 +60,7 @@ const MyContext:React.FC<IContextProps> = ({children}) => {
     
 
     const connect = () => {
-        let infobipRTC = new InfobipRTC('', { debug: true } );
+        let infobipRTC = new InfobipRTC('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiJhZjcxNmEzMi0xYzdiLTQ3N2MtOTAxMy0yODljNmE3YjM4NDMiLCJpZGVudGl0eSI6ImZyYW5jbyIsImlzcyI6IkluZm9iaXAiLCJuYW1lIjoiZnJhbmNvIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjA2MTExMzYsImNhcHMiOltdfQ.l5vGqdPaZS3ZKTAwNLUmKdl5RWtwydLA8Rz2hVJkMOw', { debug: true } );
 
         infobipRTC && (connectionRef.current = infobipRTC);
         

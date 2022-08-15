@@ -1,17 +1,17 @@
 .App {
   background-color: #282c34;
   min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
   font-size: calc(10px + 2vmin);
   color: white;
 
 }
 
 .callModalContainer{
-  height: 90vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,6 +25,7 @@
   grid-template-columns: 1fr 1fr;
   width: 75vw;
   height: 75vh;
+  margin-bottom: 25px;
 }
 
 .userCallItem{
@@ -35,6 +36,10 @@
   justify-content: center;
   text-align: center;
   align-items: center;
+}
+
+.startCallControls{
+  margin-top: 125px;
 }
 
 .startCallControls, .inCallControls{
@@ -89,6 +94,7 @@ video{
 }
 
 .connectionState{
+  margin: 25px 0 25px;
   width: 40vw;
   display: flex;
   flex-direction: column;
