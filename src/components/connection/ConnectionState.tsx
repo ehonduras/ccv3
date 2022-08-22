@@ -1,8 +1,12 @@
 import React, {useContext} from 'react';
-import { Context } from '../context/MyContext';
+import { ConnectionStatus } from '../../help/ConnectionStatus';
 
-const ConnectionState = () => {
-    const {connectionStatus, connect, disconnect, showCallModal, connectionRef} = useContext(Context);
+interface IConnectionStateProps {
+    connectionStatus: ConnectionStatus;
+    disconnect: () => void;
+}
+
+const ConnectionState: React.FC<IConnectionStateProps> = ({connectionStatus, disconnect}) => {
 
   return (
     <div className='connectionState'>
