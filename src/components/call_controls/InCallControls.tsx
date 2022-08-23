@@ -1,16 +1,18 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import { faMicrophoneSlash } from '@fortawesome/free-solid-svg-icons';
 import { faVideoSlash} from '@fortawesome/free-solid-svg-icons';
 import { faPhoneSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface IInCallControls{
+  isLocalUserMuted: boolean;
   hangUpCall: () => void;
   muteUser: () => void;
   toggleVideo: () => void;
 }
 
-const InCallControls: React.FC<IInCallControls> = ({ hangUpCall, muteUser, toggleVideo }) => {
+const InCallControls: React.FC<IInCallControls> = ({ hangUpCall, muteUser, isLocalUserMuted, toggleVideo }) => {
 
   const handlePhoneSlash = () => {
     hangUpCall();
@@ -29,7 +31,9 @@ const InCallControls: React.FC<IInCallControls> = ({ hangUpCall, muteUser, toggl
   return (
     <div className='inCallControls'>
         <div className='iconContainer'>
-            <FontAwesomeIcon icon={faMicrophoneSlash} color='whitesmoke' size='1x' className='icon' onClick={handleMicrophoneSlash} ></FontAwesomeIcon>
+            {
+              isLocalUserMuted ? <FontAwesomeIcon icon={faMicrophoneSlash} color='red' size='1x' className='icon' onClick={handleMicrophoneSlash} ></FontAwesomeIcon> : <FontAwesomeIcon icon={faMicrophone} color='whitesmoke' size='1x' className='icon' onClick={handleMicrophoneSlash} ></FontAwesomeIcon>
+            }
         </div>
         <div className='iconContainer'>
             <FontAwesomeIcon icon={faVideoSlash} color='whitesmoke' size='1x' className='icon' onClick={handleVideoSlash} ></FontAwesomeIcon>

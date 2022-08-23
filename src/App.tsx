@@ -1,11 +1,10 @@
-import React, { useContext, useState, useRef, MutableRefObject, useEffect } from 'react';
+import React, { useState, useRef, MutableRefObject, useEffect } from 'react';
 import './App.css';
 import ConnectionState from './components/connection/ConnectionState';
 import { ConnectionStatus } from './help/ConnectionStatus';
-import StartCallControls from './components/call_controls/StartCallControls';
 import OutgoingCallComponent from './components/call/OutgoingCallComponent';
 import IncomingCallComponent from './components/call/IncomingCallComponent';
-import { InfobipRTC, IncomingCallEvent } from 'infobip-rtc';
+import { InfobipRTC } from 'infobip-rtc';
 
 function App() {
   const [connectionStatus, connectionStatusSet] = useState(ConnectionStatus.disconnected);
@@ -13,11 +12,6 @@ function App() {
   const [identity, identitySet] = useState('');
   
   const connectionRef:MutableRefObject<InfobipRTC | null> = useRef(null);
-
-  useEffect(() => {
-    console.log('useEffect');
-    connect();
-  }, [])
 
   const connect = () => {
     let infobipRTC = new InfobipRTC('', { debug: true } );
@@ -64,7 +58,7 @@ function App() {
 
   return (
     <div className="App">
-        <ConnectionState connectionStatus={connectionStatus} disconnect={disconnect}/>
+        <ConnectionState connectionStatus={connectionStatus} connect={connect} disconnect={disconnect}/>
 
         <OutgoingCallComponent connectionRef={connectionRef} ></OutgoingCallComponent>
 

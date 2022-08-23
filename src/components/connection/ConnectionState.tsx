@@ -4,9 +4,10 @@ import { ConnectionStatus } from '../../help/ConnectionStatus';
 interface IConnectionStateProps {
     connectionStatus: ConnectionStatus;
     disconnect: () => void;
+    connect: () => void;
 }
 
-const ConnectionState: React.FC<IConnectionStateProps> = ({connectionStatus, disconnect}) => {
+const ConnectionState: React.FC<IConnectionStateProps> = ({connectionStatus, connect, disconnect}) => {
 
   return (
     <div className='connectionState'>
@@ -17,7 +18,7 @@ const ConnectionState: React.FC<IConnectionStateProps> = ({connectionStatus, dis
         
         <div className='connectContainer'>
             <p>Connect</p>
-            <button>Connect</button>
+            <button onClick={connect}>Connect</button>
         </div>
         <div className='connectContainer'>
             <p>Disconnect</p>

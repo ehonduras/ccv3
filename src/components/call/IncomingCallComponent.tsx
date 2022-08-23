@@ -103,7 +103,7 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({ identity, isC
         isCallRinging && <ReceiveCall identity={identity} isCallRingingSet={isCallRingingSet} answerCall={answerCall} declineCall={declineCall} />
        }
        {
-        isCallOngoing && <CallModal streams={streams} isLocalVideoCall={isLocalVideoCall} isRemoteVideoCall={isRemoteVideoCall}> <InCallControls hangUpCall={hangUpCall} muteUser={muteUser} toggleVideo={toggleVideo} /> </CallModal>
+        isCallOngoing && <CallModal streams={streams} isLocalVideoCall={isLocalVideoCall} isRemoteVideoCall={isRemoteVideoCall}> <InCallControls hangUpCall={hangUpCall} muteUser={muteUser} isLocalUserMuted={isLocalUserMuted} toggleVideo={toggleVideo} /> </CallModal>
        }
     </div>
   )

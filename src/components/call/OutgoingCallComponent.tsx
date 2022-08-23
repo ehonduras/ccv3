@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, MutableRefObject } from 'react';
+import React, { useState, useRef, MutableRefObject } from 'react';
 import { InfobipRTC, CallOptions, Call, HangupStatus } from 'infobip-rtc';
 import StartCallControls from '../call_controls/StartCallControls';
 import InCallControls from '../call_controls/InCallControls';
@@ -108,7 +108,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({ connectionRef }) 
 
   return (
     <>
-      { isCallOngoing ? <CallModal streams={streams} isLocalVideoCall={isLocalVideoCall} isRemoteVideoCall={isRemoteVideoCall}> <InCallControls hangUpCall={hangUpCall} muteUser={muteUser} toggleVideo={toggleVideo} /> </CallModal> : <StartCallControls startAudioCall={startAudioCall} startVideoCall={startVideoCall}/> }
+      { isCallOngoing ? <CallModal streams={streams} isLocalVideoCall={isLocalVideoCall} isRemoteVideoCall={isRemoteVideoCall}> <InCallControls hangUpCall={hangUpCall} muteUser={muteUser} isLocalUserMuted={isLocalUserMuted} toggleVideo={toggleVideo} /> </CallModal> : <StartCallControls startAudioCall={startAudioCall} startVideoCall={startVideoCall}/> }
     </>
   )
 }
