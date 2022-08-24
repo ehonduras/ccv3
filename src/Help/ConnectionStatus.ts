@@ -1,6 +1,6 @@
-export enum ConnectionStatus{
-    connected = 'CONNECTED',
-    disconnected = 'DISCONNECTED',
-    reconnecting = 'RECONNECTING',
-    reconnected = 'RECCONNECTED'
+export enum ConnectionStatus {
+  connected = "CONNECTED",
+  disconnected = "DISCONNECTED",
+  reconnecting = "RECONNECTING",
+  reconnected = "RECCONNECTED"
 }

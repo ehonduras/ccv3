@@ -1,4 +1,4 @@
-export interface Streams{
-    localStream: MediaStream | null;
-    remoteStream: MediaStream | null;
-  }
+export interface Streams {
+  localStream: MediaStream | null;
+  remoteStream: MediaStream | null;
+}

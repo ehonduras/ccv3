@@ -1,68 +1,84 @@
-import React, { useState, useRef, MutableRefObject, useEffect } from 'react';
-import './App.css';
-import ConnectionState from './components/connection/ConnectionState';
-import { ConnectionStatus } from './help/ConnectionStatus';
-import OutgoingCallComponent from './components/call/OutgoingCallComponent';
-import IncomingCallComponent from './components/call/IncomingCallComponent';
-import { InfobipRTC } from 'infobip-rtc';
+import React, { useState, useRef, MutableRefObject, useEffect } from "react";
+import "./App.css";
+import ConnectionState from "./components/connection/ConnectionState";
+import { ConnectionStatus } from "./help/ConnectionStatus";
+import OutgoingCallComponent from "./components/call/OutgoingCallComponent";
+import IncomingCallComponent from "./components/call/IncomingCallComponent";
+import { InfobipRTC } from "infobip-rtc";
 
 function App() {
-  const [connectionStatus, connectionStatusSet] = useState(ConnectionStatus.disconnected);
+  const [connectionStatus, connectionStatusSet] = useState(
+    ConnectionStatus.disconnected
+  );
   const [isCallRinging, isCallRingingSet] = useState(false);
-  const [identity, identitySet] = useState('');
-  
-  const connectionRef:MutableRefObject<InfobipRTC | null> = useRef(null);
+  const [identity, identitySet] = useState("");
+
+  const connectionRef: MutableRefObject<InfobipRTC | null> = useRef(null);
 
   const connect = () => {
-    let infobipRTC = new InfobipRTC('', { debug: true } );
+    let infobipRTC = new InfobipRTC("", { debug: true });
 
     infobipRTC && (connectionRef.current = infobipRTC);
-    
+
     connectionRef.current && connectionRef.current.connect();
 
     checkConnectionStatus();
-  }
+  };
 
   const disconnect = () => {
-      console.log('disconnecting');
-      
-      connectionRef.current && connectionRef.current.disconnect();
-  }
+    console.log("disconnecting");
+
+    connectionRef.current && connectionRef.current.disconnect();
+  };
 
   const checkConnectionStatus = () => {
-    if(connectionRef && connectionRef.current){
-      connectionRef.current.on('connected', function(event: {identity: string}){
-        console.log('Connected with identity: ' + event.identity);
+    if (connectionRef && connectionRef.current) {
+      connectionRef.current.on("connected", function(event: {
+        identity: string;
+      }) {
+        console.log("Connected with identity: " + event.identity);
         identitySet(event.identity);
         connectionStatusSet(ConnectionStatus.connected);
       });
     }
 
-    connectionRef.current!.on('disconnected', function(event: {reason: string}){
-      console.log('Disconnected');
+    connectionRef.current!.on("disconnected", function(event: {
+      reason: string;
+    }) {
+      console.log("Disconnected");
       console.log(event);
-      connectionStatusSet(ConnectionStatus.disconnected);                                
+      connectionStatusSet(ConnectionStatus.disconnected);
     });
 
-    connectionRef.current!.on('reconnecting', function(){
-      console.log('Reconnecting');
+    connectionRef.current!.on("reconnecting", function() {
+      console.log("Reconnecting");
       connectionStatusSet(ConnectionStatus.reconnecting);
     });
 
-    connectionRef.current!.on('reconnected', function(){
-      console.log('Reconnected');
+    connectionRef.current!.on("reconnected", function() {
+      console.log("Reconnected");
       connectionStatusSet(ConnectionStatus.reconnected);
     });
-  }
-
+  };
 
   return (
     <div className="App">
-        <ConnectionState connectionStatus={connectionStatus} connect={connect} disconnect={disconnect}/>
+      <ConnectionState
+        connectionStatus={connectionStatus}
+        connect={connect}
+        disconnect={disconnect}
+      />
 
-        <OutgoingCallComponent connectionRef={connectionRef} ></OutgoingCallComponent>
+      <OutgoingCallComponent
+        connectionRef={connectionRef}
+      ></OutgoingCallComponent>
 
-        <IncomingCallComponent identity={identity} isCallRinging={isCallRinging} connectionRef={connectionRef} isCallRingingSet={isCallRingingSet} ></IncomingCallComponent>
+      <IncomingCallComponent
+        identity={identity}
+        isCallRinging={isCallRinging}
+        connectionRef={connectionRef}
+        isCallRingingSet={isCallRingingSet}
+      ></IncomingCallComponent>
     </div>
   );
 }

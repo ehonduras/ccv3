@@ -1,6 +1,6 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext, useState } from "react";
 
-interface IReceiveCallProps{
+interface IReceiveCallProps {
   identity: string;
 
   answerCall: () => void;
@@ -9,31 +9,39 @@ interface IReceiveCallProps{
   isCallRingingSet: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReceiveCall: React.FC<IReceiveCallProps> = ({ identity, answerCall, declineCall, isCallRingingSet }) => {
-   
+const ReceiveCall: React.FC<IReceiveCallProps> = ({
+  identity,
+  answerCall,
+  declineCall,
+  isCallRingingSet
+}) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     switch (event.currentTarget.name) {
-      case 'answer':
+      case "answer":
         isCallRingingSet(false);
         answerCall();
         break;
-      case 'decline':
+      case "decline":
         isCallRingingSet(false);
         declineCall();
         break;
       default:
-        console.log('Something was wrong');        
+        console.log("Something was wrong");
         break;
-  }
-}
+    }
+  };
 
   return (
-    <div className='incomingCallContainer'>
-        <p>{ identity ? identity : 'Unknown person' } is calling you</p>
-        <button onClick={handleClick} name='answer'>Answer Call</button>
-        <button onClick={handleClick} name='decline'>Decline Call</button>
+    <div className="incomingCallContainer">
+      <p>{identity ? identity : "Unknown person"} is calling you</p>
+      <button onClick={handleClick} name="answer">
+        Answer Call
+      </button>
+      <button onClick={handleClick} name="decline">
+        Decline Call
+      </button>
     </div>
-  )
-}
+  );
+};
 
 export default ReceiveCall;
