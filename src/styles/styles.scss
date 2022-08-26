@@ -95,12 +95,12 @@ $button-color: whitesmoke;
         @include buttonStyle();
     }
 
-    button{
+    button:hover{
         @include buttonHoverBehaviour();
         background-image: linear-gradient(to bottom, #2e4554, #228ea1);
     }
 
-    button:button:last-child:hover{
+    button:last-child:hover{
         @include buttonHoverBehaviour();
         background-image: linear-gradient(to bottom, #2e4554, #ca252d);
     }
