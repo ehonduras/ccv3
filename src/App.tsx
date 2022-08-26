@@ -16,7 +16,10 @@ function App() {
   const connectionRef: MutableRefObject<InfobipRTC | null> = useRef(null);
 
   const connect = () => {
-    let infobipRTC = new InfobipRTC("", { debug: true });
+    let infobipRTC = new InfobipRTC(
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiJhZjcxNmEzMi0xYzdiLTQ3N2MtOTAxMy0yODljNmE3YjM4NDMiLCJpZGVudGl0eSI6ImZyYW5jbyIsImlzcyI6IkluZm9iaXAiLCJuYW1lIjoiZnJhbmNvIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjEzNjUwMjksImNhcHMiOltdfQ.CgDp2fcDhZmIJ9WiGAeTWNnTYVrZTgzxwdTg2VcB8i4",
+      { debug: true }
+    );
 
     infobipRTC && (connectionRef.current = infobipRTC);
 

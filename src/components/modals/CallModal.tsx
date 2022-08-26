@@ -1,5 +1,4 @@
 import React, { useRef, MutableRefObject, useEffect } from "react";
-import InCallControls from "../call_controls/InCallControls";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Streams } from "../../help/streamsInterface";
@@ -8,7 +7,7 @@ interface ICallModal {
   children: React.ReactNode;
   streams: Streams;
   isLocalVideoCall: boolean;
-  isRemoteVideoCall: boolean;
+  isRemoteVideoCall: boolean; 
 }
 
 const CallModal: React.FC<ICallModal> = ({
@@ -21,10 +20,8 @@ const CallModal: React.FC<ICallModal> = ({
   const remoteStream: MutableRefObject<HTMLVideoElement | null> = useRef(null);
 
   useEffect(() => {
-    localStream.current &&
-      (localStream.current.srcObject = streams.localStream);
-    remoteStream.current &&
-      (remoteStream.current.srcObject = streams.remoteStream);
+    localStream.current && (localStream.current.srcObject = streams.localStream);
+    remoteStream.current && (remoteStream.current.srcObject = streams.remoteStream);
   }, [streams]);
 
   return (
@@ -42,7 +39,7 @@ const CallModal: React.FC<ICallModal> = ({
         </div>
         <div className="userCallItem">
           {isRemoteVideoCall ? (
-            <video playsInline autoPlay className="video" ref={remoteStream} />
+              <video playsInline autoPlay className="video" ref={remoteStream}>video</video> 
           ) : (
             <>
               <FontAwesomeIcon icon={faUser} size="5x"></FontAwesomeIcon>

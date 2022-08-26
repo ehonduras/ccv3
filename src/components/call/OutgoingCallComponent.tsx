@@ -79,12 +79,8 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
   };
 
   const checkIfVideoCall = () => {
-    callRef.current &&
-      callRef.current.hasLocalVideo() &&
-      isLocalVideoCallSet(true);
-    callRef.current &&
-      callRef.current.hasRemoteVideo() &&
-      isRemoteVideoCallSet(true);
+    callRef.current && callRef.current.hasLocalVideo() && isLocalVideoCallSet(true);
+    callRef.current && callRef.current.hasRemoteVideo() && isRemoteVideoCallSet(true);
   };
 
   const createCallEventListeners = () => {
@@ -121,7 +117,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
             localStream: event.localStream,
             remoteStream: event.remoteStream
           });
-
+          
           checkIfVideoCall();
         }
       );
