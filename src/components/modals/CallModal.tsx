@@ -7,7 +7,7 @@ interface ICallModal {
   children: React.ReactNode;
   streams: Streams;
   isLocalVideoCall: boolean;
-  isRemoteVideoCall: boolean; 
+  isRemoteVideoCall: boolean;
 }
 
 const CallModal: React.FC<ICallModal> = ({
@@ -20,8 +20,10 @@ const CallModal: React.FC<ICallModal> = ({
   const remoteStream: MutableRefObject<HTMLVideoElement | null> = useRef(null);
 
   useEffect(() => {
-    localStream.current && (localStream.current.srcObject = streams.localStream);
-    remoteStream.current && (remoteStream.current.srcObject = streams.remoteStream);
+    localStream.current &&
+      (localStream.current.srcObject = streams.localStream);
+    remoteStream.current &&
+      (remoteStream.current.srcObject = streams.remoteStream);
   }, [streams]);
 
   return (
@@ -39,7 +41,9 @@ const CallModal: React.FC<ICallModal> = ({
         </div>
         <div className="userCallItem">
           {isRemoteVideoCall ? (
-              <video playsInline autoPlay className="video" ref={remoteStream}>video</video> 
+            <video playsInline autoPlay className="video" ref={remoteStream}>
+              video
+            </video>
           ) : (
             <>
               <FontAwesomeIcon icon={faUser} size="5x"></FontAwesomeIcon>

@@ -93,11 +93,11 @@ $button-color: whitesmoke;
 
     button{
         @include buttonStyle();
-    }
 
-    button:hover{
-        @include buttonHoverBehaviour();
-        background-image: linear-gradient(to bottom, #2e4554, #228ea1);
+        &:hover{
+          @include buttonHoverBehaviour();
+          background-image: linear-gradient(to bottom, #2e4554, #228ea1);
+        }
     }
 
     button:last-child:hover{

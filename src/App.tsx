@@ -1,10 +1,13 @@
 import React, { useState, useRef, MutableRefObject, useEffect } from "react";
-import "./App.css";
+import "./styles/styles.scss";
 import ConnectionState from "./components/connection/ConnectionState";
 import { ConnectionStatus } from "./help/ConnectionStatus";
 import OutgoingCallComponent from "./components/call/OutgoingCallComponent";
 import IncomingCallComponent from "./components/call/IncomingCallComponent";
-import { InfobipRTC } from "infobip-rtc";
+import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
+import InfobipRTCEventHandlers, { InfobipRTCEventHandlersProps } from "./InfobipRTCEventHandlers";
+
+const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiJhZjcxNmEzMi0xYzdiLTQ3N2MtOTAxMy0yODljNmE3YjM4NDMiLCJpZGVudGl0eSI6ImZyYW5jbyIsImlzcyI6IkluZm9iaXAiLCJuYW1lIjoiZnJhbmNvIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjIxNjgxNDQsImNhcHMiOltdfQ.fYFiPlC8VHFBhE91Or5YUdYyRgC_C7Cbafx1_D9MzLA";
 
 function App() {
   const [connectionStatus, connectionStatusSet] = useState(
@@ -12,20 +15,23 @@ function App() {
   );
   const [isCallRinging, isCallRingingSet] = useState(false);
   const [identity, identitySet] = useState("");
+  const [incomingCallEvent, setIncomingCallEvent] = useState<IncomingCallEvent | null>(null);
 
   const connectionRef: MutableRefObject<InfobipRTC | null> = useRef(null);
 
   const connect = () => {
     let infobipRTC = new InfobipRTC(
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiJhZjcxNmEzMi0xYzdiLTQ3N2MtOTAxMy0yODljNmE3YjM4NDMiLCJpZGVudGl0eSI6ImZyYW5jbyIsImlzcyI6IkluZm9iaXAiLCJuYW1lIjoiZnJhbmNvIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjEzNjUwMjksImNhcHMiOltdfQ.CgDp2fcDhZmIJ9WiGAeTWNnTYVrZTgzxwdTg2VcB8i4",
+      TOKEN,
       { debug: true }
     );
 
-    infobipRTC && (connectionRef.current = infobipRTC);
-
-    connectionRef.current && connectionRef.current.connect();
-
+    connectToInfobipRTC(infobipRTC);
     checkConnectionStatus();
+  };
+
+  const connectToInfobipRTC = (infobipRTC: InfobipRTC) => {
+    infobipRTC && (connectionRef.current = infobipRTC);
+    connectionRef.current && connectionRef.current.connect();
   };
 
   const disconnect = () => {
@@ -34,34 +40,24 @@ function App() {
     connectionRef.current && connectionRef.current.disconnect();
   };
 
+  const onConnectionStatusSet = (connectionStatus: ConnectionStatus) => {
+    connectionStatusSet(connectionStatus);
+  }
+
+  const onIdentitySet = (identity: string) => {
+    identitySet(identity);
+  }
+
+  const onIncomingCallEvent = (event: IncomingCallEvent) => {
+    setIncomingCallEvent(event);
+  }
+
+  const getInfobipRTCEventHandlersProps = (): InfobipRTCEventHandlersProps => {
+    return {connectionRef, onConnectionStatusSet, onIdentitySet, onIncomingCallEvent} as InfobipRTCEventHandlersProps;
+  };
+
   const checkConnectionStatus = () => {
-    if (connectionRef && connectionRef.current) {
-      connectionRef.current.on("connected", function(event: {
-        identity: string;
-      }) {
-        console.log("Connected with identity: " + event.identity);
-        identitySet(event.identity);
-        connectionStatusSet(ConnectionStatus.connected);
-      });
-    }
-
-    connectionRef.current!.on("disconnected", function(event: {
-      reason: string;
-    }) {
-      console.log("Disconnected");
-      console.log(event);
-      connectionStatusSet(ConnectionStatus.disconnected);
-    });
-
-    connectionRef.current!.on("reconnecting", function() {
-      console.log("Reconnecting");
-      connectionStatusSet(ConnectionStatus.reconnecting);
-    });
-
-    connectionRef.current!.on("reconnected", function() {
-      console.log("Reconnected");
-      connectionStatusSet(ConnectionStatus.reconnected);
-    });
+    InfobipRTCEventHandlers(getInfobipRTCEventHandlersProps());
   };
 
   return (
@@ -72,15 +68,16 @@ function App() {
         disconnect={disconnect}
       />
 
-      <OutgoingCallComponent
+      {!incomingCallEvent && <OutgoingCallComponent
         connectionRef={connectionRef}
-      ></OutgoingCallComponent>
+      ></OutgoingCallComponent>}
 
       <IncomingCallComponent
         identity={identity}
         isCallRinging={isCallRinging}
         connectionRef={connectionRef}
         isCallRingingSet={isCallRingingSet}
+        incomingCallEvent={incomingCallEvent}
       ></IncomingCallComponent>
     </div>
   );

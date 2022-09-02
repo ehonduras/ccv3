@@ -9,6 +9,7 @@ interface IIncomingCallComponent {
   identity: string;
   isCallRinging: boolean;
   connectionRef: MutableRefObject<InfobipRTC | null>;
+  incomingCallEvent: IncomingCallEvent | null;
 
   isCallRingingSet: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -17,6 +18,7 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
   identity,
   isCallRinging,
   connectionRef,
+  incomingCallEvent,
   isCallRingingSet
 }) => {
   const [streams, streamsSet] = useState<Streams>({
@@ -30,9 +32,13 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
 
   const incomingCallRef: MutableRefObject<IncomingCall | null> = useRef(null);
 
+  /*useEffect(() => {
+    connectionRef.current && onIncomingCallEventListeners();
+  }, [connectionRef.current]);*/
+
   useEffect(() => {
-    connectionRef.current && createIncomingCallEventListeners();
-  }, [connectionRef.current]);
+    onIncomingCallEventListeners();
+}, [incomingCallEvent]);
 
   const answerCall = () => {
     incomingCallRef.current && incomingCallRef.current.accept();
@@ -88,13 +94,10 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
       isRemoteVideoCallSet(true);
   };
 
-  const createIncomingCallEventListeners = () => {
-    console.log("createIncomingCallEventListeners");
-
-    connectionRef.current!.on("incoming-call", function(
-      incomingCallEvent: IncomingCallEvent
-    ) {
+  const onIncomingCallEventListeners = () => {
+    if(incomingCallEvent) {
       isCallRingingSet(true);
+      
       incomingCallRef.current = incomingCallEvent.incomingCall as IncomingCall;
       console.log(
         "Received incoming call from: " +
@@ -115,11 +118,13 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
 
         checkIfVideoCall();
       });
+
       incomingCallRef.current.on("hangup", function() {
         incomingCallRef.current && incomingCallRef.current.hangup();
         isCallRingingSet(false);
         isCallOngoingSet(false);
       });
+
       incomingCallRef.current.on("updated", function(event: {
         localStream: MediaStream;
         remoteStream: MediaStream;
@@ -131,8 +136,8 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
 
         checkIfVideoCall();
       });
-    });
-  };
+    }
+    }
 
   return (
     <div>
