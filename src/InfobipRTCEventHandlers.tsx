@@ -2,6 +2,14 @@ import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
 import React, { MutableRefObject } from "react";
 import { ConnectionStatus } from "./help/ConnectionStatus";
 
+enum EVENT_NAME {
+    CONNECTED = "connected",
+    DISCONNECTED = "disconnected",
+    RECONNECTING = "reconnecting",
+    RECONNECTED = "reconnected",
+    INCOMING_CALL = "incoming-call"
+}
+
  export interface InfobipRTCEventHandlersProps {
     connectionRef: MutableRefObject<InfobipRTC | null>;
     onConnectionStatusSet: (connectionStatus: ConnectionStatus) => void;
@@ -11,7 +19,7 @@ import { ConnectionStatus } from "./help/ConnectionStatus";
 
 function InfobipRTCEventHandlers(props: InfobipRTCEventHandlersProps) {
     if (props.connectionRef && props.connectionRef.current) {
-        props.connectionRef.current.on("connected", function(event: {
+        props.connectionRef.current.on(EVENT_NAME.CONNECTED, function(event: {
           identity: string;
         }) {
           console.log("Connected with identity: " + event.identity);
@@ -19,24 +27,24 @@ function InfobipRTCEventHandlers(props: InfobipRTCEventHandlersProps) {
           props.onConnectionStatusSet(ConnectionStatus.connected);
         });
   
-        props.connectionRef.current.on("disconnected", function(event: {
+        props.connectionRef.current.on(EVENT_NAME.DISCONNECTED, function(event: {
           reason: string;
         }) {
           console.log("Disconnected");
           props.onConnectionStatusSet(ConnectionStatus.disconnected);
         });
     
-        props.connectionRef.current.on("reconnecting", function() {
+        props.connectionRef.current.on(EVENT_NAME.RECONNECTING, function() {
           console.log("Reconnecting");
           props.onConnectionStatusSet(ConnectionStatus.reconnecting);
         });
     
-        props.connectionRef.current.on("reconnected", function() {
+        props.connectionRef.current.on(EVENT_NAME.RECONNECTED, function() {
           console.log("Reconnected");
           props.onConnectionStatusSet(ConnectionStatus.reconnected);
         });
 
-        props.connectionRef.current.on("incoming-call", function(
+        props.connectionRef.current.on(EVENT_NAME.INCOMING_CALL, function(
             incomingCallEvent: IncomingCallEvent
           ) {
             props.onIncomingCallEvent(incomingCallEvent); 

@@ -7,7 +7,7 @@ import IncomingCallComponent from "./components/call/IncomingCallComponent";
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
 import InfobipRTCEventHandlers, { InfobipRTCEventHandlersProps } from "./InfobipRTCEventHandlers";
 
-const TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHAiOiJhZjcxNmEzMi0xYzdiLTQ3N2MtOTAxMy0yODljNmE3YjM4NDMiLCJpZGVudGl0eSI6ImZyYW5jbyIsImlzcyI6IkluZm9iaXAiLCJuYW1lIjoiZnJhbmNvIiwibG9jYXRpb24iOiIiLCJleHAiOjE2NjIxNjgxNDQsImNhcHMiOltdfQ.fYFiPlC8VHFBhE91Or5YUdYyRgC_C7Cbafx1_D9MzLA";
+const TOKEN = "";
 
 function App() {
   const [connectionStatus, connectionStatusSet] = useState(
