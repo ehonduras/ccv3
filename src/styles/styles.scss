@@ -1,6 +1,10 @@
 $primary-background-color: #282c34;
 $button-color: whitesmoke;
 
+*{
+  box-sizing: border-box;
+}
+
 @mixin buttonStyle {
     background: $button-color;
     width: 100%;
