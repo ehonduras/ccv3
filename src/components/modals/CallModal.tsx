@@ -1,7 +1,7 @@
 import React, { useRef, MutableRefObject, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Streams } from "../../help/streamsInterface";
+import { Streams } from "../../types/StreamsInterface";
 
 interface ICallModal {
   children: React.ReactNode;

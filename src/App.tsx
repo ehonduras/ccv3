@@ -1,11 +1,12 @@
-import React, { useState, useRef, MutableRefObject, useEffect } from "react";
+import { useState, useRef, MutableRefObject } from "react";
 import "./styles/styles.scss";
 import ConnectionState from "./components/connection/ConnectionState";
-import { ConnectionStatus } from "./help/ConnectionStatus";
+import { ConnectionStatus } from "./types/ConnectionStatus";
 import OutgoingCallComponent from "./components/call/OutgoingCallComponent";
 import IncomingCallComponent from "./components/call/IncomingCallComponent";
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
-import InfobipRTCEventHandlers, { InfobipRTCEventHandlersProps } from "./InfobipRTCEventHandlers";
+import ibRtcConnectionEventsHandler from "./functions/ibRtcConnectionEventsHandler";
+import { ConnectionEventData } from "./types/ConnectionEventData";
 
 const TOKEN = "";
 
@@ -15,15 +16,15 @@ function App() {
   );
   const [isCallRinging, isCallRingingSet] = useState(false);
   const [identity, identitySet] = useState("");
-  const [incomingCallEvent, setIncomingCallEvent] = useState<IncomingCallEvent | null>(null);
+  const [
+    incomingCallEvent,
+    setIncomingCallEvent
+  ] = useState<IncomingCallEvent | null>(null);
 
   const connectionRef: MutableRefObject<InfobipRTC | null> = useRef(null);
 
-  const connect = () => {
-    let infobipRTC = new InfobipRTC(
-      TOKEN,
-      { debug: true }
-    );
+  const instantiateIbClient = () => {
+    let infobipRTC = new InfobipRTC(TOKEN, { debug: true });
 
     connectToInfobipRTC(infobipRTC);
     checkConnectionStatus();
@@ -42,35 +43,54 @@ function App() {
 
   const onConnectionStatusSet = (connectionStatus: ConnectionStatus) => {
     connectionStatusSet(connectionStatus);
-  }
+  };
 
   const onIdentitySet = (identity: string) => {
     identitySet(identity);
-  }
+  };
 
   const onIncomingCallEvent = (event: IncomingCallEvent) => {
     setIncomingCallEvent(event);
-  }
+  };
 
-  const getInfobipRTCEventHandlersProps = (): InfobipRTCEventHandlersProps => {
-    return {connectionRef, onConnectionStatusSet, onIdentitySet, onIncomingCallEvent} as InfobipRTCEventHandlersProps;
+  const getConnectionData = ({
+    connectionRef,
+    onConnectionStatusSet,
+    onIdentitySet,
+    onIncomingCallEvent
+  }: ConnectionEventData) => {
+    return {
+      connectionRef,
+      onConnectionStatusSet,
+      onIdentitySet,
+      onIncomingCallEvent
+    } as ConnectionEventData;
   };
 
   const checkConnectionStatus = () => {
-    InfobipRTCEventHandlers(getInfobipRTCEventHandlersProps());
+    ibRtcConnectionEventsHandler(
+      getConnectionData({
+        connectionRef,
+        onConnectionStatusSet,
+        onIdentitySet,
+        onIncomingCallEvent
+      })
+    );
   };
 
   return (
     <div className="App">
       <ConnectionState
         connectionStatus={connectionStatus}
-        connect={connect}
+        instantiateIbClient={instantiateIbClient}
         disconnect={disconnect}
       />
 
-      {!incomingCallEvent && <OutgoingCallComponent
-        connectionRef={connectionRef}
-      ></OutgoingCallComponent>}
+      {!incomingCallEvent && (
+        <OutgoingCallComponent
+          connectionRef={connectionRef}
+        ></OutgoingCallComponent>
+      )}
 
       <IncomingCallComponent
         identity={identity}

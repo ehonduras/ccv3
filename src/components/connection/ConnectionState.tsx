@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
-import { ConnectionStatus } from "../../help/ConnectionStatus";
+import { ConnectionStatus } from "../../types/ConnectionStatus";
 
 interface IConnectionStateProps {
   connectionStatus: ConnectionStatus;
   disconnect: () => void;
-  connect: () => void;
+  instantiateIbClient: () => void;
 }
 
 const ConnectionState: React.FC<IConnectionStateProps> = ({
   connectionStatus,
-  connect,
+  instantiateIbClient,
   disconnect
 }) => {
   return (
@@ -21,7 +21,7 @@ const ConnectionState: React.FC<IConnectionStateProps> = ({
 
       <div className="connectContainer">
         <p>Connect</p>
-        <button onClick={connect}>Connect</button>
+        <button onClick={instantiateIbClient}>Connect</button>
       </div>
       <div className="connectContainer">
         <p>Disconnect</p>

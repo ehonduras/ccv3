@@ -3,7 +3,7 @@ import InCallControls from "../call_controls/InCallControls";
 import ReceiveCall from "../call_controls/ReceiveCall";
 import CallModal from "../modals/CallModal";
 import { InfobipRTC, IncomingCall, IncomingCallEvent } from "infobip-rtc";
-import { Streams } from "../../help/streamsInterface";
+import { Streams } from "../../types/StreamsInterface";
 
 interface IIncomingCallComponent {
   identity: string;
@@ -38,7 +38,7 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
 
   useEffect(() => {
     onIncomingCallEventListeners();
-}, [incomingCallEvent]);
+  }, [incomingCallEvent]);
 
   const answerCall = () => {
     incomingCallRef.current && incomingCallRef.current.accept();
@@ -95,9 +95,9 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
   };
 
   const onIncomingCallEventListeners = () => {
-    if(incomingCallEvent) {
+    if (incomingCallEvent) {
       isCallRingingSet(true);
-      
+
       incomingCallRef.current = incomingCallEvent.incomingCall as IncomingCall;
       console.log(
         "Received incoming call from: " +
@@ -137,7 +137,7 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
         checkIfVideoCall();
       });
     }
-    }
+  };
 
   return (
     <div>

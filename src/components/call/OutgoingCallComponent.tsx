@@ -3,7 +3,7 @@ import { InfobipRTC, CallOptions, Call, HangupStatus } from "infobip-rtc";
 import StartCallControls from "../call_controls/StartCallControls";
 import InCallControls from "../call_controls/InCallControls";
 import CallModal from "../modals/CallModal";
-import { Streams } from "../../help/streamsInterface";
+import { Streams } from "../../types/StreamsInterface";
 
 interface IOutgoingCallProps {
   connectionRef: MutableRefObject<InfobipRTC | null>;
