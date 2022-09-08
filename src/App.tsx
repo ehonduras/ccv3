@@ -4,11 +4,14 @@ import ConnectionState from "./components/connection/ConnectionState";
 import { ConnectionStatus } from "./types/ConnectionStatus";
 import OutgoingCallComponent from "./components/call/OutgoingCallComponent";
 import IncomingCallComponent from "./components/call/IncomingCallComponent";
+import Header from "./components/header/Header";
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
 import ibRtcConnectionEventsHandler from "./functions/ibRtcConnectionEventsHandler";
 import { ConnectionEventData } from "./types/ConnectionEventData";
+import MainApp from "./components/main/MainApp";
 
-const TOKEN = "";
+const TOKEN =
+  "";
 
 function App() {
   const [connectionStatus, connectionStatusSet] = useState(
@@ -80,7 +83,9 @@ function App() {
 
   return (
     <div className="App">
-      <ConnectionState
+      <Header />
+
+      <MainApp>       <ConnectionState
         connectionStatus={connectionStatus}
         instantiateIbClient={instantiateIbClient}
         disconnect={disconnect}
@@ -98,7 +103,9 @@ function App() {
         connectionRef={connectionRef}
         isCallRingingSet={isCallRingingSet}
         incomingCallEvent={incomingCallEvent}
-      ></IncomingCallComponent>
+      ></IncomingCallComponent> </MainApp>
+
+
     </div>
   );
 }

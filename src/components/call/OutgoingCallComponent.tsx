@@ -4,6 +4,7 @@ import StartCallControls from "../call_controls/StartCallControls";
 import InCallControls from "../call_controls/InCallControls";
 import CallModal from "../modals/CallModal";
 import { Streams } from "../../types/StreamsInterface";
+import Calling from "../call_controls/Calling";
 
 interface IOutgoingCallProps {
   connectionRef: MutableRefObject<InfobipRTC | null>;
@@ -16,6 +17,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
     localStream: null,
     remoteStream: null
   });
+  const [isCallRinging, isCallRingingSet] = useState(false);
   const [isCallOngoing, isCallOngoingSet] = useState(false);
   const [isLocalUserMuted, isLocalUserMutedSet] = useState(false);
   const [isLocalVideoCall, isLocalVideoCallSet] = useState(false);
@@ -91,6 +93,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
     if (callRef.current) {
       callRef.current.on("ringing", function() {
         console.log("Call is ringing on johnny's device!");
+        isCallRingingSet(true);
       });
 
       callRef.current.on("established", function(event: {
@@ -98,6 +101,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
         remoteStream: MediaStream;
       }) {
         console.log("Alice answered call!");
+        isCallRingingSet(false);
         isCallOngoingSet(true);
 
         streamsSet({
@@ -112,6 +116,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
         console.log(event);
         callRef.current && callRef.current.hangup();
         isCallOngoingSet(false);
+        isCallRingingSet(false);
       });
 
       callRef.current.on(
@@ -136,7 +141,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
           isLocalVideoCall={isLocalVideoCall}
           isRemoteVideoCall={isRemoteVideoCall}
         >
-          {" "}
+          {/* {" "} */}
           <InCallControls
             hangUpCall={hangUpCall}
             muteUser={muteUser}
@@ -144,6 +149,8 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
             toggleVideo={toggleVideo}
           />{" "}
         </CallModal>
+      ) : isCallRinging ? (
+        <Calling />
       ) : (
         <StartCallControls
           startAudioCall={startAudioCall}

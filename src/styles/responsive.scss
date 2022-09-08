@@ -1,0 +1,96 @@
+$breakpoint-small: 320px;
+$breakpoint-medium: 460px;
+$breakpoint-large: 960px;
+
+@mixin smallScreenButton{
+    min-height: 60%;
+    max-width: 100%;
+    font-size: medium;
+    align-self: right;
+}
+
+@mixin smallScreenFlex{
+    display: flex;
+    justify-content: space-around;
+}
+
+@mixin smallScreenHeader{
+    position: absolute;
+    top: 0;
+    max-height: 8vh;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+@media (max-width: $breakpoint-small) {
+    .App{
+        position: relative;
+        @include smallScreenFlex;
+    }
+
+    .headerContainer{
+        @include smallScreenHeader();
+        font-size: small;
+    }
+
+    .connectionState{
+        min-width: 100vw;
+        border: 5px solid red;
+
+        button{
+            @include smallScreenButton;
+        }
+    }
+
+    .startCallControls{
+        min-width: 100%;
+        margin-top: 25% !important;
+    }
+}
+
+@media (max-width: $breakpoint-medium) {
+    .App{
+        position: relative;
+        @include smallScreenFlex;
+    }
+
+    .headerContainer{
+        @include smallScreenHeader();
+    }
+
+    .connectionState{
+        min-width: 95%;
+
+        button{
+            @include smallScreenButton;
+        }
+    }
+
+    .startCallControls{
+        min-width: 100%;
+        margin-top: 25% !important;
+    }
+}
+
+@media (max-width: $breakpoint-large) {
+    .App{
+        position: relative;
+        @include smallScreenFlex;
+    }
+
+    .headerContainer{
+        @include smallScreenHeader();
+    }
+
+    .connectionState{
+        min-width: 75%;
+
+        button{
+            @include smallScreenButton;
+        }
+    }
+
+    .startCallControls{
+        min-width: 50%;
+    }
+}

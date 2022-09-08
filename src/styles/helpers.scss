@@ -1,0 +1,23 @@
+@mixin buttonStyle {
+    background: $button-color;
+    width: 100%;
+    height: 25%;
+    border-radius: 28px;
+    font-size: 30px;
+    font-weight: bolder;
+    letter-spacing: 3px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    @include flexDisplay();
+    justify-content: center;
+}
+
+@mixin hoverBehaviour {
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+@mixin flexDisplay {
+    display: flex;
+    align-items: center;
+}

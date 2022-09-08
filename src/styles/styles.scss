@@ -1,32 +1,12 @@
-$primary-background-color: #282c34;
+@import 'responsive.scss';
+@import 'helpers.scss';
+@import '../components/header/header.scss';
+
+$primary-background-color: #3BACB6;
 $button-color: whitesmoke;
 
 *{
   box-sizing: border-box;
-}
-
-@mixin buttonStyle {
-    background: $button-color;
-    width: 100%;
-    height: 25%;
-    border-radius: 28px;
-    font-size: 30px;
-    font-weight: bolder;
-    letter-spacing: 3px;
-    padding: 10px 20px 10px 20px;
-    text-decoration: none;
-    @include flexDisplay();
-    justify-content: center;
-}
-
-@mixin buttonHoverBehaviour {
-    cursor: pointer;
-    transform: scale(1.02);
-}
-
-@mixin flexDisplay {
-    display: flex;
-    align-items: center;
 }
 
 .App {
@@ -35,9 +15,10 @@ $button-color: whitesmoke;
     background-color: $primary-background-color;
     min-height: 100vh;
     max-height: 100vh;
+    width: 100vw;
     font-size: calc(10px + 2vmin);
     color: white;
-  
+    overflow:hidden;
   }
   
   .callModalContainer{
@@ -66,14 +47,14 @@ $button-color: whitesmoke;
     text-align: center;
   }
   
-  .startCallControls{
-    margin: 15px;
-  }
-  
   .startCallControls, .inCallControls{
     width: 33vw;
     @include flexDisplay();
     justify-content: space-around;
+  }
+
+  .startCallControls{
+    margin: 10%;
   }
   
   .icon:hover{
@@ -99,13 +80,13 @@ $button-color: whitesmoke;
         @include buttonStyle();
 
         &:hover{
-          @include buttonHoverBehaviour();
+          @include hoverBehaviour();
           background-image: linear-gradient(to bottom, #2e4554, #228ea1);
         }
     }
 
     button:last-child:hover{
-        @include buttonHoverBehaviour();
+        @include hoverBehaviour();
         background-image: linear-gradient(to bottom, #2e4554, #ca252d);
     }
   }
@@ -116,21 +97,21 @@ $button-color: whitesmoke;
     display: flex;
     flex-direction: column;
     align-items: left;
-  }
-  
-  .connectContainer{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 
-    button{
-        @include buttonStyle();
-        height: 40%;
-        align-self: center;
-        font-size: large;
-        border-radius: 5px;
-    }
-
-    button:hover{
-        @include buttonHoverBehaviour();
+      .connectContainer{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    
+        button{
+            @include buttonStyle();
+            height: 40%;
+            align-self: center;
+            font-size: large;
+            border-radius: 5px;
+        }
+    
+        button:hover{
+            @include hoverBehaviour();
+        }
     }
   }
