@@ -5,11 +5,12 @@
 $primary-background-color: #3BACB6;
 $button-color: whitesmoke;
 
-*{
+  *{
   box-sizing: border-box;
-}
+  // outline: 3px orange solid;
+  }
 
-.App {
+  .App {
     @include flexDisplay();
     flex-direction: column;
     background-color: $primary-background-color;
@@ -19,6 +20,12 @@ $button-color: whitesmoke;
     font-size: calc(10px + 2vmin);
     color: white;
     overflow:hidden;
+  }
+
+  .mainApp{
+    width: 80%;
+    @include flexDisplay();
+    flex-direction: column;
   }
   
   .callModalContainer{
@@ -39,7 +46,6 @@ $button-color: whitesmoke;
   }
   
   .userCallItem{
-    border: 3px solid red;
     width: 99%;
     height: 99%;
     @include flexDisplay();
@@ -48,7 +54,7 @@ $button-color: whitesmoke;
   }
   
   .startCallControls, .inCallControls{
-    width: 33vw;
+    width: 25%;
     @include flexDisplay();
     justify-content: space-around;
   }
@@ -91,27 +97,39 @@ $button-color: whitesmoke;
     }
   }
   
-  .connectionState{
-    margin: 25px 0 0 0;
-    width: 40vw;
+  .connectionComponent{
+    margin: 50px 0 0 0;
+    border: 5px solid red;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: left;
+    justify-content: center;
+    align-items: center;
+  }
 
-      .connectContainer{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+  .connectedState{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+      .connectContainer, .btnContainer{
+        @include flexDisplay();
+        justify-content: space-around;
+      }
+
+      span{
+        font-weight: bold;
+      }
+
+      button{
+          @include buttonStyle();
+          height: 50%;
+          width: 175px;
+          font-size: large;
+          border-radius: 25px;
+          border: none;
+      }
     
-        button{
-            @include buttonStyle();
-            height: 40%;
-            align-self: center;
-            font-size: large;
-            border-radius: 5px;
-        }
-    
-        button:hover{
-            @include hoverBehaviour();
-        }
-    }
+      button:hover{
+          @include hoverBehaviour();
+      }
   }

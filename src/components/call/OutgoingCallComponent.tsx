@@ -141,13 +141,12 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
           isLocalVideoCall={isLocalVideoCall}
           isRemoteVideoCall={isRemoteVideoCall}
         >
-          {/* {" "} */}
           <InCallControls
             hangUpCall={hangUpCall}
             muteUser={muteUser}
             isLocalUserMuted={isLocalUserMuted}
             toggleVideo={toggleVideo}
-          />{" "}
+          />
         </CallModal>
       ) : isCallRinging ? (
         <Calling />

@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { ConnectionStatus } from "../../types/ConnectionStatus";
+import ConnectedStatus from "./ConnectedStatus";
+import Identity from "./Identity";
 
 interface IConnectionStateProps {
   connectionStatus: ConnectionStatus;
@@ -13,20 +15,14 @@ const ConnectionState: React.FC<IConnectionStateProps> = ({
   disconnect
 }) => {
   return (
-    <div className="connectionState">
-      <div className="connectContainer">
-        <p>Connection Status: </p>
-        <p>{connectionStatus}</p>
-      </div>
-
-      <div className="connectContainer">
-        <p>Connect</p>
-        <button onClick={instantiateIbClient}>Connect</button>
-      </div>
-      <div className="connectContainer">
-        <p>Disconnect</p>
-        <button onClick={disconnect}>Disconnect</button>
-      </div>
+    <div className="connectionComponent">
+      <Identity />
+      <ConnectedStatus
+        connectionStatus={connectionStatus}
+        instantiateIbClient={instantiateIbClient}
+        disconnect={disconnect}
+      />
+      <Identity />
     </div>
   );
 };
