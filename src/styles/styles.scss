@@ -99,7 +99,6 @@ $button-color: whitesmoke;
   
   .connectionComponent{
     margin: 50px 0 0 0;
-    border: 5px solid red;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -132,4 +131,45 @@ $button-color: whitesmoke;
       button:hover{
           @include hoverBehaviour();
       }
+  }
+
+  .identityContainer{
+    position: relative;
+    @include flexDisplay();
+    flex-direction: column;
+    
+    .identityPickBtn{
+      @include buttonStyle();
+      width: 250px;
+      height: 50px;
+      font-size: medium;
+      font-weight: bold;
+      border-radius: 25px;
+      border: none;
+      background-color: $navigation-background-color;
+      color: white;
+    }
+
+    button:hover{
+      @include hoverBehaviour();
+    }
+
+    .identitiesDropdown{
+      position: absolute;
+      left: 0;
+      transform: translateY(15%);
+      height: 150px;
+      width: 100%;
+      @include flexDisplay();
+      flex-direction: column;
+      justify-content: space-around;
+
+      button{
+        width: 60%;
+        height: 50%;
+        background-color: whitesmoke;
+        font-weight: bold;
+        border-radius: 15px;
+      }
+    }
   }

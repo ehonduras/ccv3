@@ -1,21 +1,21 @@
-import { useState, useRef, MutableRefObject } from "react";
+import { useState, useRef, MutableRefObject, useEffect } from "react";
 import ibRtcConnectionEventsHandler from "../../functions/ibRtcConnectionEventsHandler";
+import { obtainToken } from "../../functions/obtainToken";
 import { ConnectionEventData } from "../../types/ConnectionEventData";
 import ConnectionState from "../../components/connection/ConnectionState";
 import { ConnectionStatus } from "../../types/ConnectionStatus";
 import OutgoingCallComponent from "../../components/call/OutgoingCallComponent";
 import IncomingCallComponent from "../../components/call/IncomingCallComponent";
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
-
-const TOKEN =
-  "";
+import { ibIdentities } from "../../functions/ibIdentities";
 
 const MainApp: React.FC = () => {
   const [connectionStatus, connectionStatusSet] = useState(
     ConnectionStatus.disconnected
   );
   const [isCallRinging, isCallRingingSet] = useState(false);
-  const [identity, identitySet] = useState("");
+  const [localIdentity, localIdentitySet] = useState("");
+  const [calleeIdentity, calleeIdentitySet] = useState("");
   const [
     incomingCallEvent,
     setIncomingCallEvent
@@ -23,7 +23,8 @@ const MainApp: React.FC = () => {
 
   const connectionRef: MutableRefObject<InfobipRTC | null> = useRef(null);
 
-  const instantiateIbClient = () => {
+  const instantiateIbClient = async () => {
+    let TOKEN = await obtainToken(localIdentity);
     let infobipRTC = new InfobipRTC(TOKEN, { debug: true });
 
     connectToInfobipRTC(infobipRTC);
@@ -46,7 +47,7 @@ const MainApp: React.FC = () => {
   };
 
   const onIdentitySet = (identity: string) => {
-    identitySet(identity);
+    localIdentitySet(identity);
   };
 
   const onIncomingCallEvent = (event: IncomingCallEvent) => {
@@ -84,16 +85,20 @@ const MainApp: React.FC = () => {
         connectionStatus={connectionStatus}
         instantiateIbClient={instantiateIbClient}
         disconnect={disconnect}
+        localIdentity={localIdentity}
+        localIdentitySet={localIdentitySet}
       />
 
       {!incomingCallEvent && (
         <OutgoingCallComponent
           connectionRef={connectionRef}
+          calleeIdentity={calleeIdentity}
+          calleeIdentitySet={calleeIdentitySet}
         ></OutgoingCallComponent>
       )}
 
       <IncomingCallComponent
-        identity={identity}
+        identity={localIdentity} //provjeriti dodatno
         isCallRinging={isCallRinging}
         connectionRef={connectionRef}
         isCallRingingSet={isCallRingingSet}

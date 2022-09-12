@@ -5,13 +5,19 @@ import InCallControls from "../call_controls/InCallControls";
 import CallModal from "../modals/CallModal";
 import { Streams } from "../../types/StreamsInterface";
 import Calling from "../call_controls/Calling";
+import Identity from "../connection/Identity";
+import { CallParties } from "../../types/CallParties";
 
 interface IOutgoingCallProps {
   connectionRef: MutableRefObject<InfobipRTC | null>;
+  calleeIdentity: string;
+  calleeIdentitySet: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
-  connectionRef
+  connectionRef,
+  calleeIdentity,
+  calleeIdentitySet
 }) => {
   const [streams, streamsSet] = useState<Streams>({
     localStream: null,
@@ -151,10 +157,18 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
       ) : isCallRinging ? (
         <Calling />
       ) : (
-        <StartCallControls
-          startAudioCall={startAudioCall}
-          startVideoCall={startVideoCall}
-        />
+        <>
+          <StartCallControls
+            calleeIdentity={calleeIdentity}
+            startAudioCall={startAudioCall}
+            startVideoCall={startVideoCall}
+          />
+          <Identity
+            callParty={CallParties.CALLEE_SIDE}
+            identity={calleeIdentity}
+            identitySet={calleeIdentitySet}
+          />
+        </>
       )}
     </>
   );
