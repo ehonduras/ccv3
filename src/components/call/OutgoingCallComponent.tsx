@@ -11,12 +11,14 @@ import { CallParties } from "../../types/CallParties";
 interface IOutgoingCallProps {
   connectionRef: MutableRefObject<InfobipRTC | null>;
   calleeIdentity: string;
+  localIdentity: string;
   calleeIdentitySet: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
   connectionRef,
   calleeIdentity,
+  localIdentity,
   calleeIdentitySet
 }) => {
   const [streams, streamsSet] = useState<Streams>({
@@ -166,6 +168,7 @@ const OutgoingCallComponent: React.FC<IOutgoingCallProps> = ({
           <Identity
             callParty={CallParties.CALLEE_SIDE}
             identity={calleeIdentity}
+            identityToDisable={localIdentity}
             identitySet={calleeIdentitySet}
           />
         </>

@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 
 interface IReceiveCallProps {
   identity: string;
-
   answerCall: () => void;
   declineCall: () => void;
 

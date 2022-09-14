@@ -9,6 +9,7 @@ interface IConnectionStateProps {
   disconnect: () => void;
   instantiateIbClient: () => void;
   localIdentity: string;
+  calleeIdentity: string;
   localIdentitySet: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -17,6 +18,7 @@ const ConnectionState: React.FC<IConnectionStateProps> = ({
   instantiateIbClient,
   disconnect,
   localIdentity,
+  calleeIdentity,
   localIdentitySet
 }) => {
   return (
@@ -24,6 +26,7 @@ const ConnectionState: React.FC<IConnectionStateProps> = ({
       <Identity
         callParty={CallParties.LOCAL_SIDE}
         identity={localIdentity}
+        identityToDisable={calleeIdentity}
         identitySet={localIdentitySet}
       />
       <ConnectedStatus

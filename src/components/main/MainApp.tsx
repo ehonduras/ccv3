@@ -1,4 +1,4 @@
-import { useState, useRef, MutableRefObject, useEffect } from "react";
+import { useState, useRef, MutableRefObject } from "react";
 import ibRtcConnectionEventsHandler from "../../functions/ibRtcConnectionEventsHandler";
 import { obtainToken } from "../../functions/obtainToken";
 import { ConnectionEventData } from "../../types/ConnectionEventData";
@@ -7,7 +7,10 @@ import { ConnectionStatus } from "../../types/ConnectionStatus";
 import OutgoingCallComponent from "../../components/call/OutgoingCallComponent";
 import IncomingCallComponent from "../../components/call/IncomingCallComponent";
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
-import { ibIdentities } from "../../functions/ibIdentities";
+import {
+  ibIdentities,
+  obtainPossibleCallees
+} from "../../functions/ibIdentities";
 
 const MainApp: React.FC = () => {
   const [connectionStatus, connectionStatusSet] = useState(
@@ -79,6 +82,12 @@ const MainApp: React.FC = () => {
     );
   };
 
+  const getCallees = () => {
+    const callees = obtainPossibleCallees(ibIdentities, localIdentity);
+
+    return callees;
+  };
+
   return (
     <div className="mainApp">
       <ConnectionState
@@ -86,6 +95,7 @@ const MainApp: React.FC = () => {
         instantiateIbClient={instantiateIbClient}
         disconnect={disconnect}
         localIdentity={localIdentity}
+        calleeIdentity={calleeIdentity}
         localIdentitySet={localIdentitySet}
       />
 
@@ -93,12 +103,12 @@ const MainApp: React.FC = () => {
         <OutgoingCallComponent
           connectionRef={connectionRef}
           calleeIdentity={calleeIdentity}
+          localIdentity={localIdentity}
           calleeIdentitySet={calleeIdentitySet}
         ></OutgoingCallComponent>
       )}
 
       <IncomingCallComponent
-        identity={localIdentity} //provjeriti dodatno
         isCallRinging={isCallRinging}
         connectionRef={connectionRef}
         isCallRingingSet={isCallRingingSet}

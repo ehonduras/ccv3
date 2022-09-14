@@ -6,7 +6,6 @@ import { InfobipRTC, IncomingCall, IncomingCallEvent } from "infobip-rtc";
 import { Streams } from "../../types/StreamsInterface";
 
 interface IIncomingCallComponent {
-  identity: string;
   isCallRinging: boolean;
   connectionRef: MutableRefObject<InfobipRTC | null>;
   incomingCallEvent: IncomingCallEvent | null;
@@ -15,7 +14,6 @@ interface IIncomingCallComponent {
 }
 
 const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
-  identity,
   isCallRinging,
   connectionRef,
   incomingCallEvent,
@@ -108,8 +106,6 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
         localStream: MediaStream;
         remoteStream: MediaStream;
       }) {
-        console.log("calle established");
-
         isCallOngoingSet(true);
         streamsSet({
           localStream: event.localStream,
@@ -143,7 +139,7 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
     <div>
       {isCallRinging && (
         <ReceiveCall
-          identity={identity}
+          identity={incomingCallRef.current!.source().identity}
           isCallRingingSet={isCallRingingSet}
           answerCall={answerCall}
           declineCall={declineCall}

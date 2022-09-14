@@ -5,12 +5,14 @@ import IdentityDropdown from "./IdentityDropdown";
 interface IdentityProps {
   callParty: CallParties;
   identity: string;
+  identityToDisable: string;
   identitySet: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Identity: React.FC<IdentityProps> = ({
   callParty,
   identity,
+  identityToDisable,
   identitySet
 }) => {
   const [isShowDropdown, isShowDropdownSet] = useState(false);
@@ -26,6 +28,8 @@ const Identity: React.FC<IdentityProps> = ({
       </button>
       {isShowDropdown && (
         <IdentityDropdown
+          identity={identity}
+          identityToDisable={identityToDisable}
           identitySet={identitySet}
           toggleDropdown={toggleDropdown}
         />
