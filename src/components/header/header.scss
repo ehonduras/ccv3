@@ -1,0 +1,23 @@
+@import '../../styles/helpers.scss';
+
+$navigation-background-color: #2F8F9D;
+
+.headerContainer{
+    height: 10vh;
+    width: 100%;
+    // max-width: 100%;
+    background-color: $navigation-background-color;
+    padding-left: 3vw;
+    justify-content: space-between;
+
+    @include flexDisplay;
+
+    .navMenuList{
+        list-style: none;
+        width: 50%;
+        display: flex;
+        justify-content: space-around;
+
+        @include hoverBehaviour;
+    }
+}

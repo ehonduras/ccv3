@@ -1,32 +1,39 @@
 import React, { useContext } from "react";
-import { ConnectionStatus } from "../../help/ConnectionStatus";
+import { CallParties } from "../../types/CallParties";
+import { ConnectionStatus } from "../../types/ConnectionStatus";
+import ConnectedStatus from "./ConnectedStatus";
+import Identity from "./Identity";
 
 interface IConnectionStateProps {
   connectionStatus: ConnectionStatus;
   disconnect: () => void;
-  connect: () => void;
+  instantiateIbClient: () => void;
+  localIdentity: string;
+  calleeIdentity: string;
+  localIdentitySet: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ConnectionState: React.FC<IConnectionStateProps> = ({
   connectionStatus,
-  connect,
-  disconnect
+  instantiateIbClient,
+  disconnect,
+  localIdentity,
+  calleeIdentity,
+  localIdentitySet
 }) => {
   return (
-    <div className="connectionState">
-      <div className="connectContainer">
-        <p>Connection Status: </p>
-        <p>{connectionStatus}</p>
-      </div>
-
-      <div className="connectContainer">
-        <p>Connect</p>
-        <button onClick={connect}>Connect</button>
-      </div>
-      <div className="connectContainer">
-        <p>Disconnect</p>
-        <button onClick={disconnect}>Disconnect</button>
-      </div>
+    <div className="connectionComponent">
+      <Identity
+        callParty={CallParties.LOCAL_SIDE}
+        identity={localIdentity}
+        identityToDisable={calleeIdentity}
+        identitySet={localIdentitySet}
+      />
+      <ConnectedStatus
+        connectionStatus={connectionStatus}
+        instantiateIbClient={instantiateIbClient}
+        disconnect={disconnect}
+      />
     </div>
   );
 };

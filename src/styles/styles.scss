@@ -1,39 +1,31 @@
-$primary-background-color: #282c34;
+@import 'responsive.scss';
+@import 'helpers.scss';
+@import '../components/header/header.scss';
+
+$primary-background-color: #3BACB6;
 $button-color: whitesmoke;
 
-@mixin buttonStyle {
-    background: $button-color;
-    width: 100%;
-    height: 25%;
-    border-radius: 28px;
-    font-size: 30px;
-    font-weight: bolder;
-    letter-spacing: 3px;
-    padding: 10px 20px 10px 20px;
-    text-decoration: none;
-    @include flexDisplay();
-    justify-content: center;
-}
+  *{
+  box-sizing: border-box;
+  // outline: 3px orange solid;
+  }
 
-@mixin buttonHoverBehaviour {
-    cursor: pointer;
-    transform: scale(1.02);
-}
-
-@mixin flexDisplay {
-    display: flex;
-    align-items: center;
-}
-
-.App {
+  .App {
     @include flexDisplay();
     flex-direction: column;
     background-color: $primary-background-color;
     min-height: 100vh;
     max-height: 100vh;
+    width: 100vw;
     font-size: calc(10px + 2vmin);
     color: white;
-  
+    overflow:hidden;
+  }
+
+  .mainApp{
+    width: 80%;
+    @include flexDisplay();
+    flex-direction: column;
   }
   
   .callModalContainer{
@@ -54,7 +46,6 @@ $button-color: whitesmoke;
   }
   
   .userCallItem{
-    border: 3px solid red;
     width: 99%;
     height: 99%;
     @include flexDisplay();
@@ -62,14 +53,14 @@ $button-color: whitesmoke;
     text-align: center;
   }
   
-  .startCallControls{
-    margin: 15px;
-  }
-  
   .startCallControls, .inCallControls{
-    width: 33vw;
+    width: 25%;
     @include flexDisplay();
     justify-content: space-around;
+  }
+
+  .startCallControls{
+    margin: 10%;
   }
   
   .icon:hover{
@@ -93,40 +84,92 @@ $button-color: whitesmoke;
 
     button{
         @include buttonStyle();
-    }
 
-    button:hover{
-        @include buttonHoverBehaviour();
-        background-image: linear-gradient(to bottom, #2e4554, #228ea1);
+        &:hover{
+          @include hoverBehaviour();
+          background-image: linear-gradient(to bottom, #2e4554, #228ea1);
+        }
     }
 
     button:last-child:hover{
-        @include buttonHoverBehaviour();
+        @include hoverBehaviour();
         background-image: linear-gradient(to bottom, #2e4554, #ca252d);
     }
   }
   
-  .connectionState{
-    margin: 25px 0 0 0;
-    width: 40vw;
+  .connectionComponent{
+    margin: 50px 0 0 0;
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: left;
+    justify-content: center;
+    align-items: center;
   }
-  
-  .connectContainer{
+
+  .connectedState{
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
 
-    button{
-        @include buttonStyle();
-        height: 40%;
-        align-self: center;
-        font-size: large;
-        border-radius: 5px;
+      .connectContainer, .btnContainer{
+        @include flexDisplay();
+        justify-content: space-around;
+      }
+
+      span{
+        font-weight: bold;
+      }
+
+      button{
+          @include buttonStyle();
+          height: 50%;
+          width: 175px;
+          font-size: large;
+          border-radius: 25px;
+          border: none;
+      }
+    
+      button:hover{
+          @include hoverBehaviour();
+      }
+  }
+
+  .identityContainer{
+    position: relative;
+    @include flexDisplay();
+    flex-direction: column;
+    
+    .identityPickBtn{
+      @include buttonStyle();
+      width: 250px;
+      height: 50px;
+      font-size: medium;
+      font-weight: bold;
+      border-radius: 25px;
+      border: none;
+      background-color: $navigation-background-color;
+      color: white;
     }
 
     button:hover{
-        @include buttonHoverBehaviour();
+      @include hoverBehaviour();
+    }
+
+    .identitiesDropdown{
+      position: absolute;
+      left: 0;
+      transform: translateY(10%);
+      height: 130px;
+      width: 100%;
+      @include flexDisplay();
+      flex-direction: column;
+      justify-content: space-around;
+
+      button{
+        width: 60%;
+        height: 50%;
+        background-color: whitesmoke;
+        font-weight: bold;
+        border-radius: 15px;
+      }
     }
   }

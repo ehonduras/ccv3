@@ -1,23 +1,25 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faVideoCamera } from "@fortawesome/free-solid-svg-icons";
 
 interface IStartControls {
+  calleeIdentity: string;
   startAudioCall: (id: string) => void;
   startVideoCall: (id: string) => void;
 }
 
 const StartCallControls: React.FC<IStartControls> = ({
+  calleeIdentity,
   startAudioCall,
   startVideoCall
 }) => {
   const handleAudioClick = () => {
-    startAudioCall("franco");
+    startAudioCall(calleeIdentity);
   };
 
   const handleVideoClick = () => {
-    startVideoCall("franco");
+    startVideoCall(calleeIdentity);
   };
 
   return (
