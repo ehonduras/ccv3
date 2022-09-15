@@ -1,15 +1,6 @@
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
-import { MutableRefObject } from "react";
 import { ConnectionEventData } from "../types/ConnectionEventData";
-import { ConnectionStatus } from "../types/ConnectionStatus";
-
-enum EVENT_NAME {
-  CONNECTED = "connected",
-  DISCONNECTED = "disconnected",
-  RECONNECTING = "reconnecting",
-  RECONNECTED = "reconnected",
-  INCOMING_CALL = "incoming-call"
-}
+import { EVENT_CONNECTION_STATUS_NAME } from "../types/ConnectionStatus";
 
 function ibRtcConnectionEventsHandler({
   connectionRef,
@@ -18,36 +9,42 @@ function ibRtcConnectionEventsHandler({
   onIncomingCallEvent
 }: ConnectionEventData) {
   if (connectionRef && connectionRef.current) {
-    connectionRef.current.on(EVENT_NAME.CONNECTED, function(event: {
-      identity: string;
-    }) {
-      console.log("Connected with identity: " + event.identity);
-      onIdentitySet(event.identity);
-      onConnectionStatusSet(ConnectionStatus.connected);
-    });
+    connectionRef.current.on(
+      EVENT_CONNECTION_STATUS_NAME.CONNECTED,
+      function(event: { identity: string }) {
+        console.log("Connected with identity: " + event.identity);
+        onIdentitySet(event.identity);
+        onConnectionStatusSet(EVENT_CONNECTION_STATUS_NAME.CONNECTED);
+      }
+    );
 
-    connectionRef.current.on(EVENT_NAME.DISCONNECTED, function(event: {
-      reason: string;
-    }) {
-      console.log("Disconnected");
-      onConnectionStatusSet(ConnectionStatus.disconnected);
-    });
+    connectionRef.current.on(
+      EVENT_CONNECTION_STATUS_NAME.DISCONNECTED,
+      function(event: { reason: string }) {
+        onConnectionStatusSet(EVENT_CONNECTION_STATUS_NAME.DISCONNECTED);
+      }
+    );
 
-    connectionRef.current.on(EVENT_NAME.RECONNECTING, function() {
-      console.log("Reconnecting");
-      onConnectionStatusSet(ConnectionStatus.reconnecting);
-    });
+    connectionRef.current.on(
+      EVENT_CONNECTION_STATUS_NAME.RECONNECTING,
+      function() {
+        onConnectionStatusSet(EVENT_CONNECTION_STATUS_NAME.RECONNECTING);
+      }
+    );
 
-    connectionRef.current.on(EVENT_NAME.RECONNECTED, function() {
-      console.log("Reconnected");
-      onConnectionStatusSet(ConnectionStatus.reconnected);
-    });
+    connectionRef.current.on(
+      EVENT_CONNECTION_STATUS_NAME.RECONNECTED,
+      function() {
+        onConnectionStatusSet(EVENT_CONNECTION_STATUS_NAME.RECONNECTED);
+      }
+    );
 
-    connectionRef.current.on(EVENT_NAME.INCOMING_CALL, function(
-      incomingCallEvent: IncomingCallEvent
-    ) {
-      onIncomingCallEvent(incomingCallEvent);
-    });
+    connectionRef.current.on(
+      EVENT_CONNECTION_STATUS_NAME.INCOMING_CALL,
+      function(incomingCallEvent: IncomingCallEvent) {
+        onIncomingCallEvent(incomingCallEvent);
+      }
+    );
   }
 }
 

@@ -11,13 +11,15 @@ interface IIncomingCallComponent {
   incomingCallEvent: IncomingCallEvent | null;
 
   isCallRingingSet: React.Dispatch<React.SetStateAction<boolean>>;
+  incomingCallEventSet: React.Dispatch<IncomingCallEvent | null>;
 }
 
 const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
   isCallRinging,
   connectionRef,
   incomingCallEvent,
-  isCallRingingSet
+  isCallRingingSet,
+  incomingCallEventSet
 }) => {
   const [streams, streamsSet] = useState<Streams>({
     localStream: null,
@@ -119,6 +121,7 @@ const IncomingCallComponent: React.FC<IIncomingCallComponent> = ({
         incomingCallRef.current && incomingCallRef.current.hangup();
         isCallRingingSet(false);
         isCallOngoingSet(false);
+        incomingCallEventSet(null);
       });
 
       incomingCallRef.current.on("updated", function(event: {

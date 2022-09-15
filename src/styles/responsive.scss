@@ -17,7 +17,7 @@ $breakpoint-large: 960px;
 @mixin smallScreenHeader{
     position: absolute;
     top: 0;
-    max-height: 8vh;
+    max-height: 10vh;
     justify-content: center;
     text-transform: uppercase;
 }

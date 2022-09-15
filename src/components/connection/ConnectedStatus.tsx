@@ -1,8 +1,8 @@
 import React from "react";
-import { ConnectionStatus } from "../../types/ConnectionStatus";
+import { EVENT_CONNECTION_STATUS_NAME } from "../../types/ConnectionStatus";
 
 interface IConnectedStatus {
-  connectionStatus: ConnectionStatus;
+  connectionStatus: EVENT_CONNECTION_STATUS_NAME;
   disconnect: () => void;
   instantiateIbClient: () => void;
 }

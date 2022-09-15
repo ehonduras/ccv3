@@ -3,25 +3,21 @@ import ibRtcConnectionEventsHandler from "../../functions/ibRtcConnectionEventsH
 import { obtainToken } from "../../functions/obtainToken";
 import { ConnectionEventData } from "../../types/ConnectionEventData";
 import ConnectionState from "../../components/connection/ConnectionState";
-import { ConnectionStatus } from "../../types/ConnectionStatus";
+import { EVENT_CONNECTION_STATUS_NAME } from "../../types/ConnectionStatus";
 import OutgoingCallComponent from "../../components/call/OutgoingCallComponent";
 import IncomingCallComponent from "../../components/call/IncomingCallComponent";
 import { IncomingCallEvent, InfobipRTC } from "infobip-rtc";
-import {
-  ibIdentities,
-  obtainPossibleCallees
-} from "../../functions/ibIdentities";
 
 const MainApp: React.FC = () => {
   const [connectionStatus, connectionStatusSet] = useState(
-    ConnectionStatus.disconnected
+    EVENT_CONNECTION_STATUS_NAME.DISCONNECTED
   );
   const [isCallRinging, isCallRingingSet] = useState(false);
   const [localIdentity, localIdentitySet] = useState("");
   const [calleeIdentity, calleeIdentitySet] = useState("");
   const [
     incomingCallEvent,
-    setIncomingCallEvent
+    incomingCallEventSet
   ] = useState<IncomingCallEvent | null>(null);
 
   const connectionRef: MutableRefObject<InfobipRTC | null> = useRef(null);
@@ -40,12 +36,12 @@ const MainApp: React.FC = () => {
   };
 
   const disconnect = () => {
-    console.log("disconnecting");
-
     connectionRef.current && connectionRef.current.disconnect();
   };
 
-  const onConnectionStatusSet = (connectionStatus: ConnectionStatus) => {
+  const onConnectionStatusSet = (
+    connectionStatus: EVENT_CONNECTION_STATUS_NAME
+  ) => {
     connectionStatusSet(connectionStatus);
   };
 
@@ -54,7 +50,7 @@ const MainApp: React.FC = () => {
   };
 
   const onIncomingCallEvent = (event: IncomingCallEvent) => {
-    setIncomingCallEvent(event);
+    incomingCallEventSet(event);
   };
 
   const getConnectionData = ({
@@ -82,12 +78,6 @@ const MainApp: React.FC = () => {
     );
   };
 
-  const getCallees = () => {
-    const callees = obtainPossibleCallees(ibIdentities, localIdentity);
-
-    return callees;
-  };
-
   return (
     <div className="mainApp">
       <ConnectionState
@@ -113,6 +103,7 @@ const MainApp: React.FC = () => {
         connectionRef={connectionRef}
         isCallRingingSet={isCallRingingSet}
         incomingCallEvent={incomingCallEvent}
+        incomingCallEventSet={incomingCallEventSet}
       ></IncomingCallComponent>
     </div>
   );

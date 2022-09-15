@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { CallParties } from "../../types/CallParties";
-import { ConnectionStatus } from "../../types/ConnectionStatus";
+import { EVENT_CONNECTION_STATUS_NAME } from "../../types/ConnectionStatus";
 import ConnectedStatus from "./ConnectedStatus";
 import Identity from "./Identity";
 
 interface IConnectionStateProps {
-  connectionStatus: ConnectionStatus;
+  connectionStatus: EVENT_CONNECTION_STATUS_NAME;
   disconnect: () => void;
   instantiateIbClient: () => void;
   localIdentity: string;
